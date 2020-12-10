@@ -1,23 +1,32 @@
-import logo from './logo.svg';
+import { useEffect, useState } from 'react';
+import Axios from 'axios';
 import './App.css';
+import UsersList from './Components/UsersList';
+import { Table } from 'react-bootstrap';
 
 function App() {
+
+  const [listOfUsers, setListOfUsers] = useState([])
+
+  useEffect(() => {
+    const fetchUsers = async () => {
+      try {
+        const { data } = await Axios.get(`https://jsonplaceholder.typicode.com/users`);
+        setListOfUsers(data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchUsers();
+  }, []);
+
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      
+
+        {listOfUsers.map((list) =><Table striped bordered hover size="sm"> <UsersList list={list} key={list.id} /> </Table>)}
+     
     </div>
   );
 }
